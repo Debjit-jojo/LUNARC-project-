@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HealthAI - Smart Healthcare Assistant</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f8fb;
+    color:#17212b;
+}
+
+header{
+    height:70px;
+    background:linear-gradient(135deg,#087f8c,#12a4b4);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 35px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#bffaff;
+}
+
+nav{
+    display:flex;
+    gap:22px;
+}
+
+nav button{
+    background:none;
+    border:none;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+}
+
+nav button:hover{
+    color:#d5ffff;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:25px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* HERO */
+
+.hero{
+    background:linear-gradient(135deg,#e3fbff,#ffffff);
+    border-radius:25px;
+    padding:50px;
+    margin-bottom:25px;
+}
+
+.hero h1{
+    font-size:42px;
+    color:#086b77;
+    margin-bottom:15px;
+}
+
+.hero p{
+    font-size:18px;
+    max-width:750px;
+    line-height:1.7;
+}
+
+.btn{
+    border:none;
+    padding:13px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-top:18px;
+}
+
+.primary{
+    background:#098b99;
+    color:white;
+}
+
+.danger{
+    background:#e53935;
+    color:white;
+}
+
+.success{
+    background:#2e9d61;
+    color:white;
+}
+
+/* CARDS */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.07);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.icon{
+    font-size:35px;
+    margin-bottom:12px;
+}
+
+.card h3{
+    margin-bottom:10px;
+    color:#087683;
+}
+
+.card p{
+    color:#65727c;
+    line-height:1.5;
+}
+
+/* ASSISTANT */
+
+.assistant{
+    background:white;
+    border-radius:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,.08);
+    overflow:hidden;
+}
+
+.chat-header{
+    background:linear-gradient(135deg,#087f8c,#12a4b4);
+    color:white;
+    padding:20px;
+}
+
+.chat-header h2{
+    margin-bottom:5px;
+}
+
+.chat-body{
+    height:480px;
+    overflow-y:auto;
+    padding:20px;
+    background:#f8fbfc;
+}
+
+.message{
+    max-width:75%;
+    padding:14px 17px;
+    border-radius:16px;
+    margin-bottom:15px;
+    line-height:1.5;
+}
+
+.bot{
+    background:#e4f6f8;
+    margin-right:auto;
+}
+
+.user{
+    background:#098b99;
+    color:white;
+    margin-left:auto;
+}
+
+.chat-input{
+    display:flex;
+    gap:10px;
+    padding:15px;
+    border-top:1px solid #ddd;
+}
+
+.chat-input input{
+    flex:1;
+    padding:15px;
+    border:1px solid #ccd8dc;
+    border-radius:12px;
+    outline:none;
+}
+
+.chat-input button{
+    padding:0 20px;
+    border:none;
+    background:#098b99;
+    color:white;
+    border-radius:12px;
+    cursor:pointer;
+}
+
+/* QUICK QUESTIONS */
+
+.quick{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:15px;
+    background:white;
+}
+
+.quick button{
+    border:1px solid #0a8d99;
+    background:white;
+    color:#087683;
+    padding:9px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.quick button:hover{
+    background:#e3f8fa;
+}
+
+/* SYMPTOM */
+
+.symptom-box{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+}
+
+.symptoms{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+    margin-top:20px;
+}
+
+.symptoms label{
+    background:#f2f7f8;
+    padding:15px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.result{
+    margin-top:20px;
+    padding:20px;
+    border-radius:15px;
+    display:none;
+}
+
+/* HOSPITAL */
+
+.hospital{
+    border-left:5px solid #098b99;
+}
+
+.hospital .phone{
+    color:#087683;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+/* EMERGENCY */
+
+.emergency{
+    background:#fff0f0;
+    border:2px solid #ff6b6b;
+    border-radius:20px;
+    padding:30px;
+}
+
+.emergency h2{
+    color:#d62828;
+}
+
+.emergency-number{
+    font-size:32px;
+    font-weight:bold;
+    color:#d62828;
+}
+
+/* HEALTH DATA */
+
+input,select,textarea{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccd8dc;
+    border-radius:10px;
+    margin-top:7px;
+    margin-bottom:15px;
+}
+
+textarea{
+    min-height:100px;
+}
+
+.form-card{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+}
+
+/* FOOTER */
+
+footer{
+    margin-top:50px;
+    background:#102a31;
+    color:white;
+    padding:30px;
+    text-align:center;
+}
+
+.warning{
+    background:#fff7df;
+    border-left:5px solid #f2a900;
+    padding:15px;
+    margin-top:20px;
+    border-radius:8px;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    header{
+        padding:0 15px;
+    }
+
+    nav{
+        display:none;
+    }
+
+    .hero{
+        padding:30px 20px;
+    }
+
+    .hero h1{
+        font-size:30px;
+    }
+
+    .container{
+        padding:15px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+    ❤️ Health<span>AI</span>
+</div>
+
+<nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('assistant')">AI Assistant</button>
+    <button onclick="showPage('symptoms')">Symptoms</button>
+    <button onclick="showPage('doctors')">Doctors</button>
+    <button onclick="showPage('health')">Health Profile</button>
+    <button onclick="showPage('emergency')">Emergency</button>
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<!-- HOME -->
+
+<section id="home" class="page active">
+
+<div class="hero">
+
+<h1>Your Intelligent Healthcare Companion</h1>
+
+<p>
+HealthAI is an AI-powered healthcare assistance portal designed to help
+users understand health problems, identify possible warning signs,
+receive general health information and quickly locate healthcare services.
+</p>
+
+<button class="btn primary" onclick="showPage('assistant')">
+🤖 Talk to AI Assistant
+</button>
+
+<button class="btn danger" onclick="showPage('emergency')">
+🚨 Emergency Help
+</button>
+
+</div>
+
+
+<div class="grid">
+
+<div class="card" onclick="showPage('assistant')">
+<div class="icon">🤖</div>
+<h3>AI Health Assistant</h3>
+<p>Talk with the AI about symptoms, health questions, lifestyle and general medical information.</p>
+</div>
+
+<div class="card" onclick="showPage('symptoms')">
+<div class="icon">🩺</div>
+<h3>Symptom Checker</h3>
+<p>Enter symptoms and receive a general risk assessment and recommended next steps.</p>
+</div>
+
+<div class="card" onclick="showPage('doctors')">
+<div class="icon">👨‍⚕️</div>
+<h3>Find Healthcare</h3>
+<p>Find hospitals and emergency healthcare services in Nagpur.</p>
+</div>
+
+<div class="card" onclick="showPage('health')">
+<div class="icon">📊</div>
+<h3>Health Profile</h3>
+<p>Store basic health information for a personalized demo experience.</p>
+</div>
+
+<div class="card">
+<div class="icon">💊</div>
+<h3>Medicine Information</h3>
+<p>Learn general information about medicines, precautions and common uses.</p>
+</div>
+
+<div class="card">
+<div class="icon">🧠</div>
+<h3>Mental Wellness</h3>
+<p>Get supportive information about stress, anxiety, sleep and emotional wellbeing.</p>
+</div>
+
+</div>
+
+<div class="warning">
+
+<strong>Important:</strong>
+HealthAI provides educational and decision-support information.
+It does not replace a qualified doctor. If symptoms are severe or life-threatening,
+seek emergency medical care immediately.
+
+</div>
+
+</section>
+
+
+<!-- AI ASSISTANT -->
+
+<section id="assistant" class="page">
+
+<div class="assistant">
+
+<div class="chat-header">
+
+<h2>🤖 HealthAI Assistant</h2>
+
+<p>Describe what you are experiencing in your own words.</p>
+
+</div>
+
+
+<div class="quick">
+
+<button onclick="quickQuestion('I have fever and body pain')">
+Fever
+</button>
+
+<button onclick="quickQuestion('I have chest pain')">
+Chest pain
+</button>
+
+<button onclick="quickQuestion('I have headache')">
+Headache
+</button>
+
+<button onclick="quickQuestion('I am feeling anxious')">
+Anxiety
+</button>
+
+<button onclick="quickQuestion('I have stomach pain')">
+Stomach pain
+</button>
+
+<button onclick="quickQuestion('I have difficulty breathing')">
+Breathing problem
+</button>
+
+<button onclick="quickQuestion('I have vomiting and diarrhea')">
+Vomiting
+</button>
+
+</div>
+
+
+<div id="chatBody" class="chat-body">
+
+<div class="message bot">
+
+Hello! 👋 I am HealthAI.
+
+Tell me what you are experiencing.
+
+For example:
+
+<br><br>
+
+• "I have fever since yesterday"
+
+<br>
+• "My stomach hurts after eating"
+
+<br>
+• "I am having difficulty breathing"
+
+<br>
+• "I feel very anxious"
+
+<br><br>
+
+I can provide general health information and help you decide what
+level of care may be appropriate.
+
+</div>
+
+</div>
+
+
+<div class="chat-input">
+
+<input
+id="userInput"
+placeholder="Describe your health problem..."
+onkeydown="if(event.key==='Enter') sendMessage()"
+>
+
+<button onclick="sendMessage()">Send ➤</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SYMPTOMS -->
+
+<section id="symptoms" class="page">
+
+<h1>🩺 Smart Symptom Assessment</h1>
+
+<p>
+Select symptoms you are currently experiencing.
+</p>
+
+<div class="symptom-box">
+
+<div class="symptoms">
+
+<label>
+<input type="checkbox" value="fever">
+Fever
+</label>
+
+<label>
+<input type="checkbox" value="headache">
+Headache
+</label>
+
+<label>
+<input type="checkbox" value="cough">
+Cough
+</label>
+
+<label>
+<input type="checkbox" value="breathing">
+Difficulty breathing
+</label>
+
+<label>
+<input type="checkbox" value="chest">
+Chest pain
+</label>
+
+<label>
+<input type="checkbox" value="vomiting">
+Vomiting
+</label>
+
+<label>
+<input type="checkbox" value="diarrhea">
+Diarrhea
+</label>
+
+<label>
+<input type="checkbox" value="stomach">
+Stomach pain
+</label>
+
+<label>
+<input type="checkbox" value="dizziness">
+Dizziness
+</label>
+
+<label>
+<input type="checkbox" value="fatigue">
+Fatigue
+</label>
+
+<label>
+<input type="checkbox" value="rash">
+Skin rash
+</label>
+
+<label>
+<input type="checkbox" value="sore">
+Sore throat
+</label>
+
+<label>
+<input type="checkbox" value="anxiety">
+Anxiety
+</label>
+
+<label>
+<input type="checkbox" value="sleep">
+Sleep problems
+</label>
+
+<label>
+<input type="checkbox" value="bleeding">
+Unusual bleeding
+</label>
+
+<label>
+<input type="checkbox" value="confusion">
+Confusion
+</label>
+
+</div>
+
+<button class="btn primary" onclick="checkSymptoms()">
+Analyze Symptoms
+</button>
+
+<div id="symptomResult" class="result"></div>
+
+</div>
+
+</section>
+
+
+<!-- DOCTORS -->
+
+<section id="doctors" class="page">
+
+<h1>👨‍⚕️ Healthcare Services in Nagpur</h1>
+
+<p>Hospitals and emergency services available in Nagpur.</p>
+
+<br>
+
+<div class="grid">
+
+
+<div class="card hospital">
+
+<h3>VIMS Hospital</h3>
+
+<p>
+Kamptee Road, Mohan Nagar, Nagpur
+</p>
+
+<div class="phone">
+Emergency: 8007355123
+</div>
+
+<div class="phone">
+Appointments: 0712-3505800
+</div>
+
+<a href="tel:8007355123">
+<button class="btn danger">📞 Call Emergency</button>
+</a>
+
+</div>
+
+
+<div class="card hospital">
+
+<h3>IGGMCH / Mayo Hospital</h3>
+
+<p>
+Central Avenue Road, Nagpur
+</p>
+
+<div class="phone">
+Casualty: 0712-2744673
+</div>
+
+<div class="phone">
+Ambulance: 0712-2701180
+</div>
+
+<a href="tel:07122744673">
+<button class="btn danger">📞 Call Casualty</button>
+</a>
+
+</div>
+
+
+<div class="card hospital">
+
+<h3>KIMS-Kingsway Hospitals</h3>
+
+<p>
+44 Kingsway Road, Nagpur
+</p>
+
+<div class="phone">
+Phone: 0712-6789100
+</div>
+
+<a href="tel:07126789100">
+<button class="btn primary">📞 Contact</button>
+</a>
+
+</div>
+
+
+<div class="card hospital">
+
+<h3>Wockhardt Hospital</h3>
+
+<p>
+North Ambazari Road, Nagpur
+</p>
+
+<div class="phone">
+Phone: 08605604444
+</div>
+
+<a href="tel:08605604444">
+<button class="btn primary">📞 Contact</button>
+</a>
+
+</div>
+
+
+<div class="card hospital">
+
+<h3>CARE Hospitals Nagpur</h3>
+
+<p>
+Farmland Road, Panchsheel Square
+</p>
+
+<div class="phone">
+Hospital services available 24/7
+</div>
+
+<button class="btn primary">
+Find Hospital
+</button>
+
+</div>
+
+
+<div class="card hospital">
+
+<h3>Viveka Hospitals</h3>
+
+<p>
+Naik Layout, Parsodi, Subhash Nagar
+</p>
+
+<div class="phone">
+Phone: 7447441468
+</div>
+
+<a href="tel:7447441468">
+<button class="btn primary">📞 Contact</button>
+</a>
+
+</div>
+
+
+</div>
+
+<div class="warning">
+
+For serious symptoms, do not wait for the AI response.
+Contact emergency medical services or go to the nearest emergency department.
+
+</div>
+
+</section>
+
+
+<!-- EMERGENCY -->
+
+<section id="emergency" class="page">
+
+<div class="emergency">
+
+<h2>🚨 Emergency Medical Help</h2>
+
+<br>
+
+<p>
+If you or someone around you has a life-threatening medical problem,
+seek emergency medical care immediately.
+</p>
+
+<br>
+
+<h3>Emergency Warning Signs</h3>
+
+<br>
+
+<ul>
+
+<li>Severe chest pain or pressure</li>
+
+<li>Severe difficulty breathing</li>
+
+<li>Loss of consciousness</li>
+
+<li>Severe bleeding</li>
+
+<li>Sudden weakness or paralysis</li>
+
+<li>Severe confusion</li>
+
+<li>Seizure</li>
+
+<li>Severe allergic reaction</li>
+
+<li>Suspected stroke</li>
+
+<li>Major accident or trauma</li>
+
+</ul>
+
+<br>
+
+<h3>Emergency</h3>
+
+<div class="emergency-number">
+112
+</div>
+
+<br>
+
+<p>
+India's emergency response number.
+</p>
+
+<br>
+
+<a href="tel:112">
+<button class="btn danger">
+📞 Call 112
+</button>
+</a>
+
+</div>
+
+</section>
+
+
+<!-- HEALTH PROFILE -->
+
+<section id="health" class="page">
+
+<h1>👤 Personal Health Profile</h1>
+
+<div class="form-card">
+
+<label>Full Name</label>
+<input id="name" placeholder="Enter your name">
+
+<label>Age</label>
+<input id="age" type="number" placeholder="Age">
+
+<label>Gender</label>
+
+<select id="gender">
+
+<option>Select</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+
+</select>
+
+<label>Blood Group</label>
+
+<select id="blood">
+
+<option>Select</option>
+<option>A+</option>
+<option>A-</option>
+<option>B+</option>
+<option>B-</option>
+<option>AB+</option>
+<option>AB-</option>
+<option>O+</option>
+<option>O-</option>
+
+</select>
+
+<label>Existing Medical Conditions</label>
+
+<textarea
+id="conditions"
+placeholder="Diabetes, hypertension, asthma, etc."
+></textarea>
+
+<label>Current Medicines</label>
+
+<textarea
+id="medicines"
+placeholder="List medicines if any"
+></textarea>
+
+<button class="btn primary" onclick="saveProfile()">
+Save Health Profile
+</button>
+
+<p id="profileStatus"></p>
+
+</div>
+
+</section>
+
+
+<!-- HEALTH INFORMATION -->
+
+<section id="healthinfo" class="page">
+
+<h1>📚 Health Information</h1>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>❤️ Heart Health</h3>
+
+<p>
+Maintain physical activity, eat a balanced diet, avoid smoking,
+manage stress and monitor blood pressure where appropriate.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>🫁 Respiratory Health</h3>
+
+<p>
+Persistent cough, breathing difficulty or chest symptoms should be
+assessed by a healthcare professional.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>🧠 Mental Health</h3>
+
+<p>
+Stress, anxiety and sleep problems can affect daily life.
+Professional support can be useful when symptoms persist or become severe.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>🍎 Nutrition</h3>
+
+<p>
+A balanced diet containing vegetables, fruits, whole grains,
+protein and adequate fluids supports general health.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>💧 Hydration</h3>
+
+<p>
+Drink fluids regularly and pay attention to signs of dehydration,
+especially during illness or hot weather.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>😴 Sleep</h3>
+
+<p>
+Regular sleep schedules and good sleep habits can support physical
+and mental wellbeing.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<footer>
+
+<p>
+© 2026 HealthAI | AI Healthcare Assistance Portal
+</p>
+
+<p>
+Educational assistance only — not a replacement for professional medical care.
+</p>
+
+</footer>
+
+
+<script>
+
+/* PAGE NAVIGATION */
+
+function showPage(page){
+
+    document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
+
+    document.getElementById(page)
+    .classList.add("active");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* CHAT */
+
+function sendMessage(){
+
+    const input=document.getElementById("userInput");
+
+    const message=input.value.trim();
+
+    if(!message) return;
+
+    addMessage(message,"user");
+
+    input.value="";
+
+    setTimeout(()=>{
+
+        const response=generateAIResponse(message);
+
+        addMessage(response,"bot");
+
+    },500);
+
+}
+
+
+function quickQuestion(question){
+
+    document.getElementById("userInput").value=question;
+
+    sendMessage();
+
+}
+
+
+function addMessage(text,type){
+
+    const chat=document.getElementById("chatBody");
+
+    const div=document.createElement("div");
+
+    div.className="message "+type;
+
+    div.innerHTML=text;
+
+    chat.appendChild(div);
+
+    chat.scrollTop=chat.scrollHeight;
+
+}
+
+
+/*
+AI DEMO ENGINE
+
+This is the frontend demonstration logic.
+
+For a real AI assistant replace generateAIResponse()
+with an API request to your backend.
+*/
+
+function generateAIResponse(message){
+
+    const text=message.toLowerCase();
+
+
+    /* EMERGENCY CONDITIONS */
+
+    if(
+        text.includes("chest pain") ||
+        text.includes("difficulty breathing") ||
+        text.includes("can't breathe") ||
+        text.includes("cannot breathe") ||
+        text.includes("unconscious") ||
+        text.includes("severe bleeding") ||
+        text.includes("stroke") ||
+        text.includes("seizure")
+    ){
+
+        return `
+
+        <strong>🚨 URGENT MEDICAL ATTENTION</strong>
+
+        <br><br>
+
+        The symptom you described can sometimes indicate a serious
+        medical condition.
+
+        <br><br>
+
+        <strong>Please do not rely on the AI for diagnosis.</strong>
+
+        <br><br>
+
+        Contact emergency services or go to the nearest emergency department.
+
+        <br><br>
+
+        <strong>India Emergency: 112</strong>
+
+        <br><br>
+
+        In Nagpur you can also consider a nearby emergency department such as
+        IGGMCH/Mayo or another hospital with emergency services.
+
+        `;
+
+    }
+
+
+    /* FEVER */
+
+    if(
+        text.includes("fever") ||
+        text.includes("temperature")
+    ){
+
+        return `
+
+        <strong>🌡️ Fever</strong>
+
+        <br><br>
+
+        Fever can occur with many conditions, including infections.
+
+        <br><br>
+
+        General steps:
+
+        <br>
+        • Rest adequately.
+        <br>
+        • Drink enough fluids.
+        <br>
+        • Monitor your temperature.
+        <br>
+        • Pay attention to other symptoms.
+
+        <br><br>
+
+        Seek medical advice if the fever is persistent,
+        unusually high, associated with severe symptoms,
+        or occurs in a vulnerable person.
+
+        `;
+
+    }
+
+
+    /* HEADACHE */
+
+    if(
+        text.includes("headache") ||
+        text.includes("head pain")
+    ){
+
+        return `
+
+        <strong>🧠 Headache</strong>
+
+        <br><br>
+
+        Headaches can have many causes such as dehydration,
+        lack of sleep, stress, eye strain or infections.
+
+        <br><br>
+
+        Try:
+
+        <br>
+        • Rest
+        <br>
+        • Adequate fluids
+        <br>
+        • Regular meals
+        <br>
+        • Reduce excessive screen exposure
+
+        <br><br>
+
+        Seek urgent medical attention if the headache is sudden,
+        extremely severe, follows a major injury, or occurs with
+        confusion, weakness, seizure or loss of consciousness.
+
+        `;
+
+    }
+
+
+    /* STOMACH */
+
+    if(
+        text.includes("stomach") ||
+        text.includes("abdominal") ||
+        text.includes("belly")
+    ){
+
+        return `
+
+        <strong>🩺 Stomach / Abdominal Symptoms</strong>
+
+        <br><br>
+
+        Abdominal discomfort can have many causes, ranging from
+        indigestion to infections and other conditions.
+
+        <br><br>
+
+        Please tell me:
+
+        <br>
+        • Where exactly is the pain?
+        <br>
+        • How long have you had it?
+        <br>
+        • Is it mild, moderate or severe?
+        <br>
+        • Do you have vomiting, fever or diarrhea?
+        <br>
+        • Did it start suddenly?
+
+        <br><br>
+
+        Severe or worsening abdominal pain should be assessed
+        by a healthcare professional.
+
+        `;
+
+    }
+
+
+    /* COUGH */
+
+    if(
+        text.includes("cough") ||
+        text.includes("cold")
+    ){
+
+        return `
+
+        <strong>🫁 Cough / Cold</strong>
+
+        <br><br>
+
+        Cough can occur with viral infections, allergies,
+        irritation and several other conditions.
+
+        <br><br>
+
+        Monitor:
+
+        <br>
+        • Duration
+        <br>
+        • Fever
+        <br>
+        • Breathing difficulty
+        <br>
+        • Chest pain
+        <br>
+        • Blood in sputum
+
+        <br><br>
+
+        Difficulty breathing or significant chest symptoms require
+        prompt medical assessment.
+
+        `;
+
+    }
+
+
+    /* ANXIETY */
+
+    if(
+        text.includes("anxiety") ||
+        text.includes("anxious") ||
+        text.includes("stress") ||
+        text.includes("panic")
+    ){
+
+        return `
+
+        <strong>🧠 Mental Wellness Support</strong>
+
+        <br><br>
+
+        I'm sorry that you're experiencing this.
+
+        <br><br>
+
+        You can try:
+
+        <br>
+        • Slow breathing
+        <br>
+        • Sitting somewhere comfortable
+        <br>
+        • Talking to someone you trust
+        <br>
+        • Reducing caffeine
+        <br>
+        • Getting adequate sleep
+
+        <br><br>
+
+        If anxiety is severely affecting your daily life,
+        consider speaking with a qualified mental-health professional.
+
+        <br><br>
+
+        If you feel that you may hurt yourself or someone else,
+        seek immediate emergency help.
+
+        `;
+
+    }
+
+
+    /* VOMITING */
+
+    if(
+        text.includes("vomit") ||
+        text.includes("vomiting")
+    ){
+
+        return `
+
+        <strong>🤢 Vomiting</strong>
+
+        <br><br>
+
+        Vomiting can happen because of infections,
+        food-related illness, medication effects and other conditions.
+
+        <br><br>
+
+        Focus on maintaining fluids if you can tolerate them.
+
+        <br><br>
+
+        Seek medical care if vomiting is persistent,
+        there is blood, severe abdominal pain, confusion,
+        significant weakness or signs of dehydration.
+
+        `;
+
+    }
+
+
+    /* DIARRHEA */
+
+    if(
+        text.includes("diarrhea") ||
+        text.includes("loose motion")
+    ){
+
+        return `
+
+        <strong>💧 Diarrhea</strong>
+
+        <br><br>
+
+        The main concern is dehydration.
+
+        <br><br>
+
+        Drink appropriate fluids and monitor your condition.
+
+        <br><br>
+
+        Medical assessment is particularly important if there is
+        blood in stool, severe dehydration, severe pain,
+        persistent symptoms or significant weakness.
+
+        `;
+
+    }
+
+
+    /* GENERAL RESPONSE */
+
+    return `
+
+    <strong>🤖 I understand that you're describing a health concern.</strong>
+
+    <br><br>
+
+    To give you more useful general guidance, please tell me:
+
+    <br>
+    • What symptoms are you experiencing?
+    <br>
+    • When did they start?
+    <br>
+    • How severe are they?
+    <br>
+    • Your approximate age
+    <br>
+    • Any existing medical conditions
+    <br>
+    • Any medicines you currently take
+    <br>
+    • Whether the symptoms are getting better or worse
+
+    <br><br>
+
+    I can then help you understand possible causes,
+    warning signs and what type of healthcare service may be appropriate.
+
+    <br><br>
+
+    <strong>Important:</strong> I cannot confirm a diagnosis through chat.
+
+    `;
+
+}
+
+
+/* SYMPTOM ANALYSIS */
+
+function checkSymptoms(){
+
+    const selected=
+        [...document.querySelectorAll(
+            ".symptoms input:checked"
+        )].map(x=>x.value);
+
+    const result=document.getElementById("symptomResult");
+
+    result.style.display="block";
+
+
+    if(selected.includes("chest") ||
+       selected.includes("breathing") ||
+       selected.includes("confusion") ||
+       selected.includes("bleeding")){
+
+        result.style.background="#ffe2e2";
+
+        result.innerHTML=`
+
+        <h2>🚨 High Priority</h2>
+
+        <br>
+
+        Some selected symptoms can be associated with
+        potentially serious conditions.
+
+        <br><br>
+
+        <strong>Please seek urgent medical assessment.</strong>
+
+        <br><br>
+
+        Emergency: <strong>112</strong>
+
+        `;
+
+        return;
+
+    }
+
+
+    if(selected.length>=3){
+
+        result.style.background="#fff4d6";
+
+        result.innerHTML=`
+
+        <h2>⚠️ Medical Review Recommended</h2>
+
+        <br>
+
+        You selected several symptoms.
+
+        Consider speaking with a healthcare professional,
+        particularly if the symptoms are persistent or worsening.
+
+        `;
+
+        return;
+
+    }
+
+
+    result.style.background="#e4f8ed";
+
+    result.innerHTML=`
+
+    <h2>ℹ️ General Guidance</h2>
+
+    <br>
+
+    The selected symptoms do not automatically indicate an emergency.
+
+    Continue monitoring your symptoms and seek medical advice
+    if they persist, become severe or new warning signs appear.
+
+    `;
+
+}
+
+
+/* HEALTH PROFILE */
+
+function saveProfile(){
+
+    const name=document.getElementById("name").value;
+
+    if(!name){
+
+        alert("Please enter your name.");
+
+        return;
+
+    }
+
+    localStorage.setItem(
+        "healthProfile",
+        JSON.stringify({
+
+            name:name,
+
+            age:document.getElementById("age").value,
+
+            gender:document.getElementById("gender").value,
+
+            blood:document.getElementById("blood").value,
+
+            conditions:document.getElementById("conditions").value,
+
+            medicines:document.getElementById("medicines").value
+
+        })
+    );
+
+
+    document.getElementById("profileStatus").innerHTML=
+    "✅ Health profile saved locally in this browser.";
+
+}
+
+
+/* LOAD PROFILE */
+
+window.onload=function(){
+
+    const profile=
+        JSON.parse(localStorage.getItem("healthProfile"));
+
+    if(profile){
+
+        document.getElementById("name").value=
+        profile.name || "";
+
+        document.getElementById("age").value=
+        profile.age || "";
+
+        document.getElementById("gender").value=
+        profile.gender || "Select";
+
+        document.getElementById("blood").value=
+        profile.blood || "Select";
+
+        document.getElementById("conditions").value=
+        profile.conditions || "";
+
+        document.getElementById("medicines").value=
+        profile.medicines || "";
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
